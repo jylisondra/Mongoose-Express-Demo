@@ -22,8 +22,14 @@ app.use(methodOverride('_method'))
 
 // Show indedx page of all products
 app.get('/products', async (req,res) => {
-    const products = await Product.find({}) // find everything asynchronously while waiting for mongoose operation
-    res.render('products/index', {products})
+    const {category}  = req.query // CHecks if there is a query for category
+    if (category) {
+        const products = await Product.find({category})
+        res.render('products/index', {products, category})
+    } else {
+        const products = await Product.find({}) // find everything asynchronously while waiting for mongoose operation
+        res.render('products/index', {products, category: 'All'})
+    }
 })
 
 // Serves form
